@@ -46,7 +46,7 @@ This project implements multi-layered security controls covering scoped IAM role
 
 - Server-Side Entitlement Verification: User identity and tier membership are validated directly against Patreon's OAuth2 API endpoints before issuing any access credentials.
 
-- Signed CloudFront Edge Authorization: Authorized users receive custom-policy CloudFront Signed Cookies generated via RSA-SHA256 signatures, restricting asset access at the edge to authorized paths (/contents/*) for a strictly defined TTL.
+- Signed CloudFront Edge Authorization: Authorized users receive custom-policy CloudFront Signed Cookies generated via RSA-SHA256 signatures, restricting asset access at the edge to authorized paths for a strictly defined TTL.
 
 - HTTP Cookie Security: All auth cookies enforce modern browser safety standards.
 
