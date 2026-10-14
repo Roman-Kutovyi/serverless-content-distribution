@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+          display: grid;
+          grid-template-rows: 55px 1fr 55px;
+
+          margin: 0;
+          background-color: #111111;
+          min-height: 100vh;
+        }
+
+         .topbar {
+             display: flex;
+             flex-direction: row;
+             background-color: #222222;
+             border-bottom: 1px solid #444;
+             width: 100%;
+             box-sizing: border-box;
+         }
+
+         .topbar-container {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             padding: 0 20px;
+             height: 60px;
+
+             max-width: 1000px;
+             width: 100%;
+             margin: 0 auto;
+         }
+         .patreon-btn {
+            background-color: #FF424D;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .patreon-btn:hover {
+            background-color: #e03842;
+        }
+        .patreon-btn:active {
+            transform: scale(0.98);
+        }
+        .free-btn {
+            background-color: #4b5563;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .free-btn:hover {
+            background-color: #6b7280;
+        }
+        .free-btn:active {
+            transform: scale(0.98);
+        }
+        .home-link {
+            color: #cccccc;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .home-link:hover {
+            background-color: #2a2a2a;
+            color: #ffffff;
+        }
+        .main-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .content-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 12px;
+            padding: 36px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            color: #d1d5db;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+     </style>
+</head>
+
+<body class = "container">
+
+    <header class = "topbar">
+    <div class="topbar-container">
+
+        <a href="https://d3njrza7z5bkut.cloudfront.net/index" class="home-link">
+            <svg height="16" role="img" viewBox="0 0 24 24" width="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Home
+        </a>
+
+        <div class="">
+            <button id="registerPatreonAction" class="patreon-btn">
+                Sign Up with <svg height="16" role="img" viewBox="0 0 24 24" width="16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 2C18.09 2 21 4.91 21 8.5C21 12.09 18.09 15 14.5 15C12.57 15 10.85 14.18 9.65 12.87L9.5 22H5V2H9.5V5.13C10.85 3.18 12.57 2 14.5 2M14.5 5C13 5 11.5 5.89 10.66 7.25C10.23 7.95 10 8.81 10 9.75C10 11.69 11.5 13.5 14.5 13.5C16.71 13.5 18.5 11.71 18.5 9.5C18.5 7.29 16.71 5 14.5 5Z"/></svg>
+            </button>
+                ||
+            <button id="getDemoAccess" class="free-btn">
+                Get Free Access
+            </button>
+        </div>
+
+
+    </div>
+    </header>
+    <main class="main-section">
+        <div class="content-card">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+    </main>
+<script>
+
+    const registerPatreonAction = document.getElementById('registerPatreonAction');
+
+
+    document.getElementById("registerPatreonAction").addEventListener("click", async (e) => {
+  		e.preventDefault();
+
+  		const state = crypto.randomUUID();
+  		sessionStorage.setItem('state', JSON.stringify(state));
+  		const scope = "identity";
+  		const baseUrl = "https://www.patreon.com/oauth2/authorize";
+  		const params = new URLSearchParams({
+  			response_type : "code",
+  			client_id : "LcSa28h6RGVElR6V5GAzU_x599HL9VzCy-MWTzbXSizp-A3iMNUaee0HZnD-1eik",
+  			redirect_uri : "https://d3njrza7z5bkut.cloudfront.net/auth.html",
+  			scope: scope,
+  			state: state
+  		});
+
+  		window.location.href = `${baseUrl}?${params.toString()}`;
+  	});
+
+    document.getElementById("getDemoAccess").addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        const targetUrl = "https://d3njrza7z5bkut.cloudfront.net/api/DemoCookies";
+        const response = await fetch(targetUrl, {
+            method: "GET",
+            credentials: "include"
+        });
+
+        let responseData;
+        try {
+            responseData = await response.json();
+        } catch {
+            responseData = { message: `Unexpected response (HTTP ${response.status})` };
+        }
+
+        if (response.ok) {
+            const originalBg = e.target.style.backgroundColor;
+            e.target.style.backgroundColor = '#28a745';
+            setTimeout(() => {
+                e.target.style.backgroundColor = originalBg;
+            }, 1500);
+        } else {
+            const originalBg = e.target.style.backgroundColor;
+            e.target.style.backgroundColor = '#dc3545';
+            setTimeout(() => {
+                e.target.style.backgroundColor = originalBg;
+            }, 1500);
+        }
+    });
+
+
+</script>
+</body>
+</html>

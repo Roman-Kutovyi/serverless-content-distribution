@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authenticating...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111111;
+            color: #e0e0e0;
+            font-family: 'Georgia', serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .loader-container {
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(163, 138, 94, 0.2);
+            border-top: 3px solid #a38a5e;
+            border-radius: 50%;
+            margin: 0 auto 30px auto;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 15px rgba(163, 138, 94, 0.2);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            font-weight: 500;
+            margin: 0;
+            color: #e0e0e0;
+        }
+
+        p {
+            font-family: sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="loader-container">
+        <div class=""></div>
+        <h2 id="mainStatus">Processing</h2>
+        <p id="subStatus">Verifying Credentials...</p>
+    </div>
+
+<script>
+
+const mainStatus = document.getElementById("mainStatus");
+const subStatus = document.getElementById("subStatus");
+
+const urlParams = new URLSearchParams(window.location.search);
+const code = urlParams.get('code');
+const state = urlParams.get('state');
+
+//Get the uuid from session storage generated previously to compare with the one received with the request
+//To verify it is one and the same user making the request
+const rawState = sessionStorage.getItem('state');
+sessionStorage.clear();
+let sessionState = null;
+try {
+    sessionState = rawState ? JSON.parse(rawState) : null;
+} catch (e) {
+    updateUI("Error", "Session Invalid");
+}
+
+function updateUI(title, subtitle) {
+    mainStatus.textContent = title;
+    subStatus.textContent = subtitle;
+}
+
+(async () => {
+    try{
+        if (window.location.pathname.startsWith('/contents')) {
+            updateUI("Access Denied", ""); //stopgap
+            //Triggers when cookies expire
+            //Call the login lambda here
+            //Then either receive cookies and redirect
+            //Or notify of subscription's expiration, prompting to renew to regain access
+        } else if (code && state && sessionState === state){
+            updateUI("Authenticating", "Verifying credentials...");
+
+            const targetUrl = `https://d3njrza7z5bkut.cloudfront.net/api/PatreonCall?code=${encodeURIComponent(code)}`;
+            const response = await fetch(targetUrl, {
+                method: "GET",
+                credentials: "include"
+            });
+
+            let responseData;
+            try {
+                responseData = await response.json();
+            } catch {
+                responseData = { message: `Unexpected response (HTTP ${response.status})` };
+            }
+
+            if (response.ok) {
+                updateUI("Success", "Redirecting...");
+
+                setTimeout(() => {
+                    window.location.href = "https://d3njrza7z5bkut.cloudfront.net/index";
+                }, 800);
+            } else {
+                updateUI("Error ", responseData.message);
+            }
+        } else {
+            updateUI("Client Side Error", "");
+        }
+    } catch (e){
+        updateUI("Error", e);
+    }
+})();
+
+</script>
+</body>
+</html>
